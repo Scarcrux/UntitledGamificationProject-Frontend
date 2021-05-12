@@ -23,6 +23,7 @@ import Router from "next/router";
 import { Provider } from "react-redux";
 import { useStore } from "../redux/store";
 import PageChange from "components/PageChange/PageChange.js";
+import { IntlProvider } from 'react-intl'
 
 import "assets/scss/nextjs-material-kit.scss?v=1.1.0";
 
@@ -101,10 +102,11 @@ const App = ({ Component, pageProps, ctx }) => {
 
   return (
     <React.Fragment>
-
+      <IntlProvider locale="en">
       <Provider store={store}>
         <Component {...pageProps} />
       </Provider>
+      </IntlProvider>
     </React.Fragment>
   );
 };

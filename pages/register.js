@@ -3,6 +3,7 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import Icon from "@material-ui/core/Icon";
+import TextField from "@material-ui/core/TextField";
 // @material-ui/icons
 import Email from "@material-ui/icons/Email";
 import People from "@material-ui/icons/People";
@@ -22,14 +23,42 @@ import CustomInput from "components/CustomInput/CustomInput.js";
 import { Form, Formik, useField } from "formik";
 import * as yup from "yup";
 import { useDispatch } from "react-redux";
-
+import { onJwtUserSignUp } from "../redux/actions";
 import styles from "assets/jss/nextjs-material-kit/pages/loginPage.js";
-
+import IntlMessages from "../@crema/utility/IntlMessages";
 import image from "assets/img/bg7.jpg";
 
 const useStyles = makeStyles(styles);
 
-export default function LoginPage(props) {
+const MyTextField = (props) => {
+  const [field, meta] = useField(props);
+  const errorText = meta.error && meta.touched ? meta.error : "";
+  return (
+    <TextField
+      {...props}
+      {...field}
+      helperText={errorText}
+      error={!!errorText}
+    />
+  );
+};
+
+const validationSchema = yup.object({
+  name: yup.string().required(<IntlMessages id='validation.nameRequired' />),
+  email: yup
+    .string()
+    .email(<IntlMessages id='validation.emailFormat' />)
+    .required(<IntlMessages id='validation.emailRequired' />),
+  password: yup
+    .string()
+    .required(<IntlMessages id='validation.passwordRequired' />),
+  confirmPassword: yup
+    .string()
+    .required(<IntlMessages id='validation.reTypePassword' />)
+});
+
+export default function RegisterPage(props) {
+  const dispatch = useDispatch();
   const [cardAnimaton, setCardAnimation] = React.useState("cardHidden");
   setTimeout(function() {
     setCardAnimation("");
@@ -57,9 +86,37 @@ export default function LoginPage(props) {
           <GridContainer justify="center">
             <GridItem xs={12} sm={6} md={4}>
               <Card className={classes[cardAnimaton]}>
-                <form className={classes.form}>
+              <Formik
+          validateOnChange={true}
+          initialValues={{
+            name: "",
+            email: "",
+            password: "",
+            confirmPassword: ""
+          }}
+          validationSchema={validationSchema}
+          onSubmit={(data, { setErrors, setSubmitting }) => {
+            if (data.password !== data.confirmPassword) {
+              setErrors({
+                confirmPassword: (
+                  <IntlMessages id='validation.passwordMisMatch' />
+                )
+              });
+            } else {
+              setSubmitting(true);
+              dispatch(
+                onJwtUserSignUp({
+                  email: data.email,
+                  password: data.password,
+                  name: data.name
+                })
+              );
+              setSubmitting(false);
+            }
+          }}>
+                  {({ isSubmitting }) => (<form className={classes.form} noValidate autoComplete='off'>
                   <CardHeader color="primary" className={classes.cardHeader}>
-                    <h4>Login</h4>
+                    <h4>Register</h4>
                     <div className={classes.socialLine}>
                       <Button
                         justIcon
@@ -93,13 +150,16 @@ export default function LoginPage(props) {
                   <p className={classes.divider}>Or Be Classical</p>
 
                   <CardBody>
-                    <CustomInput
-                      labelText="First Name..."
-                      id="first"
+
+                    <MyTextField
+                      label={<IntlMessages id='Name' />}
+                      labelText="Name"
+                    name='name'
+                    className={classes.myTextFieldRoot}
                       formControlProps={{
                         fullWidth: true
                       }}
-                      inputProps={{
+                      InputProps={{
                         type: "text",
                         endAdornment: (
                           <InputAdornment position="end">
@@ -109,8 +169,8 @@ export default function LoginPage(props) {
                       }}
                     />
                     <CustomInput
-                      labelText="Email..."
-                      id="email"
+                      labelText="Email"
+                      name="email"
                       formControlProps={{
                         fullWidth: true
                       }}
@@ -162,10 +222,12 @@ export default function LoginPage(props) {
                   </CardBody>
                   <CardFooter className={classes.cardFooter}>
                     <Button simple color="primary" size="lg">
-                      Get started
+                      Create Account
                     </Button>
                   </CardFooter>
                 </form>
+                  )}
+                </Formik>
               </Card>
             </GridItem>
           </GridContainer>
