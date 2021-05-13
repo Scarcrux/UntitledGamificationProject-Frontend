@@ -27,6 +27,7 @@ import { onJwtUserSignUp } from "../redux/actions";
 import styles from "assets/jss/nextjs-material-kit/pages/loginPage.js";
 import IntlMessages from "../@crema/utility/IntlMessages";
 import image from "assets/img/bg7.jpg";
+import { LabelImportantTwoTone } from "@material-ui/icons";
 
 const useStyles = makeStyles(styles);
 
@@ -44,17 +45,18 @@ const MyTextField = (props) => {
 };
 
 const validationSchema = yup.object({
-  name: yup.string().required(<IntlMessages id='validation.nameRequired' />),
+  name: yup.string().required(<IntlMessages id='Username Required' />),
   email: yup
     .string()
     .email(<IntlMessages id='validation.emailFormat' />)
-    .required(<IntlMessages id='validation.emailRequired' />),
+    .required(<IntlMessages id='Email Required' />),
   password: yup
     .string()
-    .required(<IntlMessages id='validation.passwordRequired' />),
+    .required(<IntlMessages id='Password Required' />),
   confirmPassword: yup
     .string()
-    .required(<IntlMessages id='validation.reTypePassword' />)
+    .oneOf([yup.ref('password'), null], <IntlMessages id='Passwords Must Match' />)
+    .required(<IntlMessages id='Password Confirmation Required' />)
 });
 
 export default function RegisterPage(props) {
@@ -65,6 +67,7 @@ export default function RegisterPage(props) {
   }, 700);
   const classes = useStyles();
   const { ...rest } = props;
+
   return (
     <div>
       <Header
@@ -99,7 +102,7 @@ export default function RegisterPage(props) {
             if (data.password !== data.confirmPassword) {
               setErrors({
                 confirmPassword: (
-                  <IntlMessages id='validation.passwordMisMatch' />
+                  <IntlMessages id='Password Mismatch' />
                 )
               });
             } else {
@@ -149,6 +152,8 @@ export default function RegisterPage(props) {
                   </CardHeader>
                   <p className={classes.divider}>Or Be Classical</p>
 
+
+
                   <CardBody>
 
                     <MyTextField
@@ -168,14 +173,28 @@ export default function RegisterPage(props) {
                         )
                       }}
                     />
-                    <CustomInput
+                    <MyTextField
+                    label={<IntlMessages id='Email' />}
                       labelText="Email"
                       name="email"
                       formControlProps={{
                         fullWidth: true
                       }}
-                      inputProps={{
+                      InputProps={{
                         type: "email",
+                        classes: {
+                          //root: classes.labelRoot,
+                          //underline: classes.underline,
+                          //disabled: classes.disabled,
+                          //underlineSuccess: classes.//underlineSuccess,
+                          //fullWidth: true,
+                          //whiteUnderline: classes.whiteUnderline,
+                          //rootError: classes.labelRootError,
+                          //rootSuccess: classes.labelRootSuccess,
+                          //formControl: classes.formControl,
+                          //input: classes.input,
+                          //whiteInput: classes.whiteInput
+                        },
                         endAdornment: (
                           <InputAdornment position="end">
                             <Email className={classes.inputIconsColor} />
@@ -183,13 +202,15 @@ export default function RegisterPage(props) {
                         )
                       }}
                     />
-                    <CustomInput
+                    <MyTextField
+                      label={<IntlMessages id='Password' />}
                       labelText="Password"
-                      id="pass"
+                      name="password"
+                      className={classes.myTextFieldRoot}
                       formControlProps={{
                         fullWidth: true
                       }}
-                      inputProps={{
+                      InputProps={{
                         type: "password",
                         endAdornment: (
                           <InputAdornment position="end">
@@ -201,13 +222,15 @@ export default function RegisterPage(props) {
                         autoComplete: "off"
                       }}
                     />
-                    <CustomInput
+                    <MyTextField
+                    label={<IntlMessages id='Confirm Password' />}
                       labelText="Confirm Password"
-                      id="pass2"
+                      name="confirmPassword"
+                      className={classes.myTextFieldRoot}
                       formControlProps={{
                         fullWidth: true
                       }}
-                      inputProps={{
+                      InputProps={{
                         type: "password",
                         endAdornment: (
                           <InputAdornment position="end">
@@ -221,7 +244,11 @@ export default function RegisterPage(props) {
                     />
                   </CardBody>
                   <CardFooter className={classes.cardFooter}>
-                    <Button simple color="primary" size="lg">
+                    <Button
+                      simple color="primary"
+                      disabled={!Formik.isValid}
+                      size="lg"
+                      type='submit'>
                       Create Account
                     </Button>
                   </CardFooter>
