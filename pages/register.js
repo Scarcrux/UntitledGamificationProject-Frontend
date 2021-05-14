@@ -20,6 +20,7 @@ import CardHeader from "components/Card/CardHeader.js";
 import CardFooter from "components/Card/CardFooter.js";
 import CustomInput from "components/CustomInput/CustomInput.js";
 
+import InfoView from "../@crema/core/InfoView";
 import { Form, Formik, useField } from "formik";
 import * as yup from "yup";
 import { useDispatch } from "react-redux";
@@ -45,18 +46,18 @@ const MyTextField = (props) => {
 };
 
 const validationSchema = yup.object({
-  name: yup.string().required(<IntlMessages id='Username Required' />),
+  name: yup.string().required(<IntlMessages id='validation.nameRequired' />),
   email: yup
     .string()
     .email(<IntlMessages id='validation.emailFormat' />)
-    .required(<IntlMessages id='Email Required' />),
+    .required(<IntlMessages id='validation.emailRequired' />),
   password: yup
     .string()
-    .required(<IntlMessages id='Password Required' />),
+    .required(<IntlMessages id='validation.passwordRequired' />),
   confirmPassword: yup
     .string()
     .oneOf([yup.ref('password'), null], <IntlMessages id='Passwords Must Match' />)
-    .required(<IntlMessages id='Password Confirmation Required' />)
+    .required(<IntlMessages id='validation.reTypePassword' />)
 });
 
 export default function RegisterPage(props) {
@@ -102,7 +103,7 @@ export default function RegisterPage(props) {
             if (data.password !== data.confirmPassword) {
               setErrors({
                 confirmPassword: (
-                  <IntlMessages id='Password Mismatch' />
+                  <IntlMessages id='passwordMisMatch' />
                 )
               });
             } else {
@@ -117,7 +118,7 @@ export default function RegisterPage(props) {
               setSubmitting(false);
             }
           }}>
-                  {({ isSubmitting }) => (<form className={classes.form} noValidate autoComplete='off'>
+                  {({ isSubmitting }) => (<Form className={classes.form} noValidate autoComplete='off'>
                   <CardHeader color="primary" className={classes.cardHeader}>
                     <h4>Register</h4>
                     <div className={classes.socialLine}>
@@ -157,7 +158,7 @@ export default function RegisterPage(props) {
                   <CardBody>
 
                     <MyTextField
-                      label={<IntlMessages id='Name' />}
+                      label={<IntlMessages id='common.name' />}
                       labelText="Name"
                     name='name'
                     className={classes.myTextFieldRoot}
@@ -174,7 +175,7 @@ export default function RegisterPage(props) {
                       }}
                     />
                     <MyTextField
-                    label={<IntlMessages id='Email' />}
+                    label={<IntlMessages id='common.email' />}
                       labelText="Email"
                       name="email"
                       formControlProps={{
@@ -203,7 +204,7 @@ export default function RegisterPage(props) {
                       }}
                     />
                     <MyTextField
-                      label={<IntlMessages id='Password' />}
+                      label={<IntlMessages id='common.password' />}
                       labelText="Password"
                       name="password"
                       className={classes.myTextFieldRoot}
@@ -223,7 +224,7 @@ export default function RegisterPage(props) {
                       }}
                     />
                     <MyTextField
-                    label={<IntlMessages id='Confirm Password' />}
+                    label={<IntlMessages id='common.retypePassword' />}
                       labelText="Confirm Password"
                       name="confirmPassword"
                       className={classes.myTextFieldRoot}
@@ -246,19 +247,20 @@ export default function RegisterPage(props) {
                   <CardFooter className={classes.cardFooter}>
                     <Button
                       simple color="primary"
-                      disabled={!Formik.isValid}
+                      disabled={isSubmitting}
                       size="lg"
                       type='submit'>
                       Create Account
                     </Button>
                   </CardFooter>
-                </form>
+                </Form>
                   )}
                 </Formik>
               </Card>
             </GridItem>
           </GridContainer>
         </div>
+        <InfoView />
         <Footer whiteFont />
       </div>
     </div>
