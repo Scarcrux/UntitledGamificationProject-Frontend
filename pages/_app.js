@@ -24,8 +24,9 @@ import { Provider } from "react-redux";
 import { useStore } from "../redux/store";
 import PageChange from "components/PageChange/PageChange.js";
 import { IntlProvider } from 'react-intl'
-
+import LocaleProvider from "../@crema/utility/LocaleProvider";
 import "assets/scss/nextjs-material-kit.scss?v=1.1.0";
+import ContextProvider from "../@crema/utility/ContextProvider";
 
 Router.events.on("routeChangeStart", url => {
   console.log(`Loading: ${url}`);
@@ -102,11 +103,13 @@ const App = ({ Component, pageProps, ctx }) => {
 
   return (
     <React.Fragment>
-      <IntlProvider locale="en">
+            <ContextProvider>
+      <LocaleProvider>
       <Provider store={store}>
         <Component {...pageProps} />
       </Provider>
-      </IntlProvider>
+      </LocaleProvider>
+      </ContextProvider>
     </React.Fragment>
   );
 };
