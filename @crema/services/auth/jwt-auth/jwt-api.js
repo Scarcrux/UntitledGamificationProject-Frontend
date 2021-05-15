@@ -2,7 +2,7 @@ import axios from 'axios';
 import {Cookies} from 'react-cookie';
 
 const jwtAxios = axios.create({
-  baseURL: 'https://crema-mongo-api.herokuapp.com/api/', //YOUR_API_URL HERE
+  baseURL: 'http://127.0.0.1:5000/', //YOUR_API_URL HERE
   headers: {
     'Content-Type': 'application/json',
   },

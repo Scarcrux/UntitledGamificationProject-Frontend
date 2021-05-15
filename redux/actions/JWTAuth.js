@@ -10,13 +10,13 @@ import {fetchError, fetchStart, fetchSuccess} from './Common';
 import {AuthType} from '../../shared/constants/AppEnums';
 import {defaultUser} from '../../shared/constants/AppConst';
 
-export const onJwtUserSignUp = ({email, password, name}) => {
-  console.log('email, password', {email, password, name});
+export const onJwtUserSignUp = ({email, password, username}) => {
+  console.log('email, password', {email, password, username});
   return async (dispatch) => {
     dispatch(fetchStart());
-    const body = {email, name, password};
+    const body = {email, username, password};
     try {
-      const res = await jwtAxios.post('users', body);
+      const res = await jwtAxios.post('register', body);
       dispatch(setJWTToken(res.data.token));
       dispatch(loadJWTUser());
     } catch (err) {
