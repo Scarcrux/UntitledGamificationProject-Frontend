@@ -112,7 +112,7 @@ export default function RegisterPage(props) {
                 onJwtUserSignUp({
                   email: data.email,
                   password: data.password,
-                  name: data.name
+                  username: data.name
                 })
               );
               setSubmitting(false);
