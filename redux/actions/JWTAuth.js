@@ -1,6 +1,7 @@
 import {
   FETCH_START,
   FETCH_SUCCESS,
+  REGISTER_SUCCESS,
   SET_AUTH_TOKEN,
   SIGNOUT_AUTH_SUCCESS,
   UPDATE_AUTH_USER,
@@ -17,8 +18,9 @@ export const onJwtUserSignUp = ({email, password, username}) => {
     const body = {email, username, password};
     try {
       const res = await jwtAxios.post('register', body);
-      dispatch(setJWTToken(res.data.token));
-      dispatch(loadJWTUser());
+      console.log(dispatch({type: REGISTER_SUCCESS}));
+      //dispatch(setJWTToken(res.data.token));
+      //dispatch(loadJWTUser());
     } catch (err) {
       console.log('error!!!!', err);
       dispatch(fetchError(err.response.data.error));

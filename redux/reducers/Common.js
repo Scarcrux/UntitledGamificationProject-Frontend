@@ -2,6 +2,7 @@ import {
   FETCH_ERROR,
   FETCH_START,
   FETCH_SUCCESS,
+  REGISTER_SUCCESS,
   HIDE_MESSAGE,
   SHOW_MESSAGE,
   TOGGLE_APP_DRAWER,
@@ -10,6 +11,7 @@ import {
 
 const INIT_STATE = {
   error: '',
+  success: false,
   loading: false,
   isAppDrawerOpen: false,
   updatingContent: false,
@@ -28,6 +30,16 @@ const commonReducer = (state = INIT_STATE, action) => {
       return {
         ...state,
         error: '',
+        message: '',
+        loading: false,
+        updatingContent: false,
+      };
+    }
+    case REGISTER_SUCCESS: {
+      return {
+        ...state,
+        error: '',
+        success: true,
         message: '',
         loading: false,
         updatingContent: false,
