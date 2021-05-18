@@ -1,4 +1,5 @@
 import React from "react";
+
 // @material-ui/core components
 import { makeStyles } from "@material-ui/core/styles";
 import InputAdornment from "@material-ui/core/InputAdornment";
@@ -23,12 +24,14 @@ import CustomInput from "components/CustomInput/CustomInput.js";
 import InfoView from "../@crema/core/InfoView";
 import { Form, Formik, useField } from "formik";
 import * as yup from "yup";
-import { useDispatch } from "react-redux";
+import { useEffect } from 'react';
+import { useSelector, useDispatch } from "react-redux";
 import { onJwtUserSignUp } from "../redux/actions";
 import styles from "assets/jss/nextjs-material-kit/pages/loginPage.js";
 import IntlMessages from "../@crema/utility/IntlMessages";
 import image from "assets/img/bg7.jpg";
 import { LabelImportantTwoTone } from "@material-ui/icons";
+import { useRouter } from 'next/router'
 
 const useStyles = makeStyles(styles);
 
@@ -62,6 +65,19 @@ const validationSchema = yup.object({
 
 export default function RegisterPage(props) {
   const dispatch = useDispatch();
+  const commonState = useSelector((state) => state.common);
+  const { success } = commonState;
+  const router = useRouter()
+  //console.log(commonState);
+
+  useEffect(() => {
+    console.log(commonState);
+    if (success) {
+      router.push('/')
+      //alert("Register success! Please check your email to confirm your registeration.");
+     }
+  }, [success])
+
   const [cardAnimaton, setCardAnimation] = React.useState("cardHidden");
   setTimeout(function() {
     setCardAnimation("");
